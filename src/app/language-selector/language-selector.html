@@ -1,0 +1,16 @@
+<div class="language-selector-container">
+    <header class="header">
+        <h1 class="title">Picture Dictionary</h1>
+        <p class="subtitle">Choose your language</p>
+    </header>
+
+    <div class="language-grid">
+        <div *ngFor="let language of languages" class="language-card" (click)="selectLanguage(language)"
+            [class.selected]="selectedLanguage?.id === language.id">
+
+            <div class="language-flag">{{ language.flag || '🌐' }}</div>
+            <h3 class="language-name">{{ language.name }}</h3>
+            <span class="language-code">{{ language.code }}</span>
+        </div>
+    </div>
+</div>

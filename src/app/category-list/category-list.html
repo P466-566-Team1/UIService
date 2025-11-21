@@ -1,0 +1,19 @@
+<div class="category-container">
+    <header class="header">
+        <button class="back-button" (click)="goBack()">←</button>
+        <h1 class="title">Picture Dictionary</h1>
+        <div class="language-indicator" *ngIf="selectedLanguage">
+            Language: {{ selectedLanguage.name }}
+        </div>
+    </header>
+
+    <div class="categories-section">
+        <h2 class="section-title">Categories</h2>
+        <div class="category-grid">
+            <div *ngFor="let category of categories" class="category-card" (click)="selectCategory(category)">
+                <div class="category-icon">📁</div>
+                <h3 class="category-name">{{ category.name }}</h3>
+            </div>
+        </div>
+    </div>
+</div>

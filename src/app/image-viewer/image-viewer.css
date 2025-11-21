@@ -1,0 +1,129 @@
+.image-viewer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.content {
+    text-align: center;
+}
+
+.topic-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.image-placeholder {
+    width: 600px;
+    height: 400px;
+    background: #ecf0f1;
+    border: 2px dashed #bdc3c7;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7f8c8d;
+    font-size: 1.2rem;
+}
+
+.label-marker {
+    position: absolute;
+    cursor: pointer;
+    border: 2px solid #e74c3c;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.label-marker:hover {
+    border-color: #c0392b;
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.marker-dot {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 12px;
+    height: 12px;
+    background: #e74c3c;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.translation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.translation-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+    min-width: 300px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #7f8c8d;
+}
+
+.translation-title {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.translation-text {
+    font-size: 1.5rem;
+    color: #27ae60;
+    margin-bottom: 1.5rem;
+    direction: auto;
+}
+
+.audio-button {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+.audio-button:hover {
+    background: #2980b9;
+}

@@ -1,0 +1,37 @@
+<div class="image-viewer-container">
+  <header class="header">
+    <button class="back-button" (click)="goBack()">←</button>
+    <h1 class="title">Picture Dictionary</h1>
+    <div class="language-indicator" *ngIf="selectedLanguage">
+      Language: {{ selectedLanguage.name }}
+    </div>
+  </header>
+
+  <div class="content">
+    <h2 class="topic-title">{{ topic?.name }}</h2>
+
+    <div class="image-container" (click)="closeTranslation()">
+      <div class="image-placeholder">
+        Image: {{ topic?.name }}
+        <!-- Replace with actual image -->
+        <!-- <img [src]="topic?.imageUrl" [alt]="topic?.name"> -->
+      </div>
+
+      <div *ngFor="let label of labels" class="label-marker" [style.left.px]="label.x" [style.top.px]="label.y"
+        [style.width.px]="label.width" [style.height.px]="label.height" (click)="onLabelClick(label, $event)">
+        <div class="marker-dot"></div>
+      </div>
+    </div>
+
+    <div *ngIf="showTranslation && selectedLabel" class="translation-overlay">
+      <div class="translation-card">
+        <button class="close-button" (click)="closeTranslation()">×</button>
+        <h3 class="translation-title">Translation</h3>
+        <p class="translation-text">{{ getCurrentTranslation(selectedLabel!) }}</p>
+        <button class="audio-button" (click)="playAudio(selectedLabel!)">
+          🔊 Play Pronunciation
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
