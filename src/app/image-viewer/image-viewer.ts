@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Label, Language, Topic } from '../models/models';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-image-viewer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './image-viewer.html',
   styleUrls: ['./image-viewer.css']
 })
@@ -16,6 +17,9 @@ export class ImageViewerComponent implements OnInit {
   selectedLanguage: Language | null = null;
   selectedLabel: Label | null = null;
   showTranslation: boolean = false;
+  showUserMenu: boolean = false;
+  showSettingsModal: boolean = false;
+  darkMode: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,7 +33,22 @@ export class ImageViewerComponent implements OnInit {
     }
 
     this.loadTopicAndLabels();
+
+    const storedDark = localStorage.getItem('darkMode');
+    this.darkMode = storedDark === 'true';
+
+    this.applyTheme();
   }
+
+  applyTheme() {
+    
+    if (this.darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }
+
 
   loadTopicAndLabels(): void {
     const topicId = this.route.snapshot.paramMap.get('topicId');
@@ -108,5 +127,32 @@ export class ImageViewerComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/topics', this.topic?.categoryId]);
+  }
+
+   toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  goToAdmin() {
+    this.router.navigate(['/admin']);
+  }
+
+  openSettings() {
+    this.showSettingsModal = true;
+  }
+
+  closeSettings() {
+    this.showSettingsModal = false;
+  }
+
+  goToLanguage() {
+    localStorage.removeItem('selectedLanguage');
+    this.router.navigate(['/']);
+  }
+
+  saveSettings() {
+    localStorage.setItem('darkMode', String(this.darkMode));
+    this.applyTheme();
+    this.closeSettings();
   }
 }

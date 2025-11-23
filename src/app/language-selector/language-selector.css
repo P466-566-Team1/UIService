@@ -1,18 +1,119 @@
-.language-selector-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+:host{
+    --bg: #F4F3F2;  
+    --card-bg: #0D1B2A; 
+    --text: #0D1B2A; 
+    --text-light: #F4F3F2;
+
+    --accent: #778DA9;
+    --accent-dark: #415A77;
+
+    --border: rgba(0, 0, 0, 0.15);
+    --shadow: rgba(0, 0, 0, 0.12);
+
+    --transition: 0.25s ease;
 }
 
+:host-context(.dark-mode) {
+    --bg: #0D1B2A;
+    --card-bg: #415A77;
+    --text: #F4F3F2;
+    --accent: #F4F3F2;
+    --border: rgba(255, 255, 255, 0.22);
+    --shadow: rgba(255, 255, 255, 0.12);
+}
+
+
+button svg {
+    color: var(--text);
+}
+
+
+.language-selector-container{
+    width: 100%;
+    height: 100vh;
+    padding: 1rem 2rem;
+    background: var(--bg);
+    box-sizing: border-box;
+    transition: background var(--transition), color var(--transition);
+}
+
+
 .header {
-    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.back-button {
+    font-size: 2.2rem;
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
 }
 
 .title {
-    font-size: 2.5rem;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
+    flex-grow: 1;
+    text-align: center;
+    color: var(--text);
+    font-size: 2rem;
+    margin-left: 6rem;
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+}
+
+.headerRight button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.userMenuWrapper {
+    position: relative;
+}
+
+
+.dropdown {
+    position: absolute;
+    top: 3.4rem;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 140px;
+    box-shadow: 0px 4px 8px var(--shadow);
+    padding: 0.4rem 0;
+    z-index: 20;
+}
+
+.dropdown-item {
+    width: 100%;
+    background: var(--card-bg);
+    color: var(--text-light);
+    padding: .6rem 1rem;
+    text-align: left;
+    border: none;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.dropdown-item:hover {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+.language-selector-container {
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
 }
 
 .subtitle {
@@ -28,24 +129,26 @@
 }
 
 .language-card {
-    background: white;
-    border: 2px solid #e9ecef;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text-light);
     border-radius: 12px;
     padding: 1.5rem;
+    text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    box-shadow: 0 2px 8px var(--shadow);
 }
 
 .language-card:hover {
-    transform: translateY(-4px);
-    border-color: #3498db;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px var(--shadow);
 }
 
 .language-card.selected {
-    border-color: #2980b9;
-    background-color: #f8f9fa;
+    border-color: var(--accent);
+    background-color: var(--accent-dark);
 }
 
 .language-flag {
@@ -55,7 +158,7 @@
 
 .language-name {
     font-size: 1.2rem;
-    color: #2c3e50;
+    color: var(--text-light);
     margin-bottom: 0.5rem;
 }
 
@@ -63,4 +166,51 @@
     color: #7f8c8d;
     font-size: 0.9rem;
     text-transform: uppercase;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.modal {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    width: 350px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 20px var(--shadow);
+    color: var(--text-light);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text);
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+
+.save-btn {
+    width: 100%;
+    padding: .75rem;
+    background: var(--accent-dark);
+    color: var(--text-light);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }

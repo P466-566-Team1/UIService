@@ -8,7 +8,7 @@ export interface Language {
 export interface Category {
   id: string;
   name: string;
-  imageUrl?: string;
+  icon?: string;
 }
 
 export interface Topic {
