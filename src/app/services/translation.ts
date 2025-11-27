@@ -4,5 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class Translation {
-  
+  // Will be implemented when backend is ready
+
 }
