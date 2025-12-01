@@ -57,7 +57,8 @@ export class ImageViewerComponent implements OnInit {
       id: topicId || '1',
       categoryId: '2',
       name: 'Cultural Holidays',
-      imageUrl: 'assets/cultural-holidays.jpg'
+      imageUrl: 'assets/cultural-holidays.jpg',
+      number: 4
     };
 
     this.labels = [

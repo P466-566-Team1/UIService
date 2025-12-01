@@ -14,10 +14,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class TopicListComponent implements OnInit {
   topics: Topic[] = [
-    { id: '1', categoryId: '2', name: 'Cultural Holidays', imageUrl: 'extended-family-1.webp' },
-    { id: '2', categoryId: '2', name: 'National Holidays', imageUrl: 'extended-family-1.webp' },
-    { id: '3', categoryId: '4', name: 'Fruits', imageUrl: 'assets/food-fruits.jpg' },
-    { id: '4', categoryId: '4', name: 'Vegetables', imageUrl: 'assets/food-vegetables.jpg' }
+   { id: '1', categoryId: '2', name: 'Cultural Holidays', imageUrl: 'extended-family-1.webp', number: 4},
+    { id: '2', categoryId: '2', name: 'National Holidays', imageUrl: 'extended-family-1.webp', number: 5 },
+    { id: '3', categoryId: '4', name: 'Fruits', imageUrl: 'assets/food-fruits.jpg', number: 2},
+    { id: '4', categoryId: '4', name: 'Vegetables', imageUrl: 'assets/food-vegetables.jpg', number: 7}
   ];
 
   category: Category | null = null;

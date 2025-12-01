@@ -1,0 +1,10 @@
+<div class="admin-login-container">
+  <h1>Admin Login</h1>
+
+  <input type="text" placeholder="Username" [(ngModel)]="username" />
+  <input type="password" placeholder="Password" [(ngModel)]="password" />
+
+  <button (click)="login()">Login</button>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+</div>

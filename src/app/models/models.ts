@@ -16,6 +16,7 @@ export interface Topic {
   categoryId: string;
   name: string;
   imageUrl: string;
+  number: number;
 }
 
 export interface Label {
