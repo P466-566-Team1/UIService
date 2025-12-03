@@ -29,8 +29,12 @@
   padding: 2rem;
   border-radius: 14px;
   border: 1px solid var(--border);
-  color: var(--text-light);
+  color: var(--text);
   box-shadow: 0 3px 10px var(--shadow);
+}
+
+.label-editor-container h1{
+  color: var(--text-light);
 }
 
 .image-placeholder {
@@ -92,7 +96,7 @@
 }
 
 input {
-  width: 100%;
+  width: 98%;
   padding: 0.6rem;
   margin-bottom: 1rem;
   border-radius: 8px;
