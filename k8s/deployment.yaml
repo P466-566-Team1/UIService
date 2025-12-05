@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uiservice-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uiservice
+  template:
+    metadata:
+      labels:
+        app: uiservice
+    spec:
+      containers:
+      - name: uiservice
+        image: uiservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
