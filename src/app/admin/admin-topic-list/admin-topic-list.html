@@ -1,0 +1,48 @@
+<div class="topic-container">
+    <header class="header">
+        <button class="back-button" (click)="goBack()">←</button>
+        <h1 class="title" *ngIf="!editingCategoryName">
+            {{ category?.name }}
+            <button class="edit-title-btn" (click)="editingCategoryName = true">✏️</button>
+        </h1>
+
+        <div class="edit-category-name" *ngIf="editingCategoryName">
+            <input [(ngModel)]="newCategoryName" placeholder="Category name" />
+            <button (click)="saveCategoryName()">Save</button>
+        </div>
+    </header>
+
+    <div class="topics-section">
+        <h2 class="section-title">Topics</h2>
+
+        <div class="topic-grid">
+            <div *ngFor="let topic of topics" class="topic-card">
+                <div class="topic-image-placeholder">
+                    {{ topic.imageUrl }}
+                </div>
+
+                <h3 class="topic-name">{{ topic.name }}</h3>
+
+                <div class="actions">
+                    <button class="edit-btn" (click)="editTopic(topic)"><small>Edit</small> ✏️</button>
+                    <button class="delete-btn" (click)="confirmDeleteTopic(topic)"><small>Delete</small>🗑️</button>
+                </div>
+            </div>
+            <div class="topic-card add-card" (click)="openAddTopic()">
+                <div class="plus">+</div>
+                <h3>Add Topic</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-overlay" *ngIf="showDeleteModal">
+    <div class="modal">
+        <h2>Delete Topic?</h2>
+        <p>Are you sure you want to delete "{{ topicToDelete?.name }}"?</p>
+
+        <div class="modal-buttons">
+            <button class="cancel-btn" (click)="cancelDelete()">Cancel</button>
+            <button class="confirm-btn" (click)="deleteTopic()">Delete</button>
+        </div>
+    </div>
+</div>

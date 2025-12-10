@@ -1,0 +1,184 @@
+:host {
+    --bg: #F4F3F2;
+    --card-bg: #0D1B2A;
+    --text: #0D1B2A;
+    --text-light: #F4F3F2;
+
+    --accent: #778DA9;
+    --accent-dark: #415A77;
+
+    --border: rgba(0, 0, 0, 0.15);
+    --shadow: rgba(0, 0, 0, 0.12);
+
+    --transition: 0.25s ease;
+}
+
+:host-context(.dark-mode) {
+    --bg: #0D1B2A;
+    --card-bg: #415A77;
+    --text: #F4F3F2;
+    --accent: #F4F3F2;
+    --border: rgba(255, 255, 255, 0.22);
+    --shadow: rgba(255, 255, 255, 0.12);
+}
+
+.admin-category-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.back-button {
+    font-size: 2.2rem;
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.title {
+    flex-grow: 1;
+    text-align: center;
+    color: var(--text);
+    font-size: 2rem;
+}
+
+.admin-nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.admin-nav a {
+    color: var(--text);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background var(--transition);
+}
+
+.admin-nav a:hover {
+    background: var(--accent);
+    color: var(--text-light);
+}
+
+.admin-nav a.active {
+    background: var(--accent-dark);
+    color: var(--text-light);
+    font-weight: bold;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.category-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px var(--shadow);
+}
+
+.category-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.category-name {
+    color: var(--text-light);
+}
+
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+}
+
+.actions button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: var(--text-light);
+}
+
+.add-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.plus {
+    font-size: 3rem;
+    margin-bottom: .5rem;
+    color: var(--text-light);
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    color: var(--text-light);
+    width: 320px;
+    text-align: center;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.cancel-btn,
+.confirm-btn {
+    padding: .7rem 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    width: 45%;
+}
+
+.cancel-btn {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+.confirm-btn {
+    background: #b30000;
+    color: white;
+}

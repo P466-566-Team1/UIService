@@ -1,0 +1,38 @@
+<div class="admin-category-container">
+    <header class="header">
+        <button class="back-button" (click)="goBack()">←</button>
+        <h1 class="title">Manage Categories</h1>
+        <nav class="admin-nav">
+            <a routerLink="/admin/categories" routerLinkActive="active">Categories</a>
+            <a routerLink="/admin/analytics" routerLinkActive="active">Analytics</a>
+        </nav>
+    </header>
+
+    <div class="category-grid">
+        <div *ngFor="let category of categories" class="category-card" (click)="openCategory(category)">
+            <div class="category-icon">{{ category.icon }}</div>
+            <h3 class="category-name">{{ category.name }}</h3>
+            <div class="actions">
+                <button class="edit-btn" (click)="editCategory(category); $event.stopPropagation();"><small>Edit</small>
+                    ✏️</button>
+                <button class="delete-btn"
+                    (click)="confirmDelete(category); $event.stopPropagation();"><small>Delete</small>🗑️</button>
+            </div>
+        </div>
+        <div class="category-card add-card" (click)="addCategory()">
+            <div class="plus">+</div>
+            <h3>Add Category</h3>
+        </div>
+
+    </div>
+    <div class="modal-overlay" *ngIf="showDeleteModal">
+        <div class="modal">
+            <h2>Delete Category?</h2>
+            <p>Are you sure you want to delete "{{ categoryToDelete?.name }}"?</p>
+            <div class="modal-buttons">
+                <button class="cancel-btn" (click)="cancelDelete()">Cancel</button>
+                <button class="confirm-btn" (click)="deleteCategory()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

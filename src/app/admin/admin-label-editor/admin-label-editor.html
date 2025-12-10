@@ -1,0 +1,65 @@
+<div class="label-editor-container">
+  <h1>Assign Labels</h1>
+  <div 
+    class="image-wrapper" 
+    (click)="placeMarker($event)"
+    #imageWrapper
+  >
+      <div class="image-placeholder">
+        Image: {{ topic?.name || 'No Image Available' }}
+      </div>
+    <div 
+      *ngFor="let l of labels; let i = index" 
+      class="label-dot"
+      [style.left.px]="l.x"
+      [style.top.px]="l.y"
+      [style.width.px]="l.width"
+      [style.height.px]="l.height"
+      (mousedown)="startDrag($event, i)"
+    >
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <h2>Label Details</h2>
+  <div class="label-card" *ngFor="let l of labels; let i = index">
+    <h3>Label {{ i + 1 }}</h3>
+
+    <label>English Translation</label>
+    <input [(ngModel)]="l.translations.en" />
+
+    <label>Persian Translation</label>
+    <input [(ngModel)]="l.translations.fa" />
+
+    <label>Spanish Translation</label>
+    <input [(ngModel)]="l.translations.es" />
+
+    <label>Persian Audio</label>
+    <input type="file" accept="audio/*" (change)="uploadAudio($event, i, 'fa')" />
+
+    <button class="audio-record-btn" (click)="toggleRecording(i, 'fa')">
+      🎙️ {{ isRecording(i,'fa') ? 'Stop Recording' : 'Record Persian' }}
+    </button>
+
+    <label>Spanish Audio</label>
+    <input type="file" accept="audio/*" (change)="uploadAudio($event, i, 'es')" />
+
+    <button class="audio-record-btn" (click)="toggleRecording(i, 'es')">
+      🎙️ {{ isRecording(i,'es') ? 'Stop Recording' : 'Record Spanish' }}
+    </button>
+
+    <label>X Coordinate</label>
+    <input type="number" [(ngModel)]="l.x" />
+
+    <label>Y Coordinate</label>
+    <input type="number" [(ngModel)]="l.y" />
+
+    <label>Width</label>
+    <input type="number" [(ngModel)]="l.width" />
+
+    <label>Height</label>
+    <input type="number" [(ngModel)]="l.height" />
+  </div>
+
+  <button class="save-all" (click)="saveAllLabels()">Save All</button>
+</div>

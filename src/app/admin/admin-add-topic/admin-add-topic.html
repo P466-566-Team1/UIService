@@ -1,0 +1,16 @@
+<div class="add-topic-container">
+  <h1>Add Topic</h1>
+
+  <label>Topic Name</label>
+  <input [(ngModel)]="name" />
+
+  <label>Upload Pre-Labelled Image</label>
+  <input type="file" (change)="onImageSelect($event)" />
+
+  <img *ngIf="previewUrl" [src]="previewUrl" class="preview" />
+
+  <label>Amount of Labels</label>
+  <input type="number" min="0" [(ngModel)]="number" />
+
+  <button (click)="saveTopic()">Next</button>
+</div>

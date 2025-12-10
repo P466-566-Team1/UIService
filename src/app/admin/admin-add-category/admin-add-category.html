@@ -1,0 +1,28 @@
+<div class="add-category-container">
+  <h1>Add Category</h1>
+
+  <label>Name</label>
+  <input [(ngModel)]="name" />
+
+  <label>Icon (emoji optional)</label>
+  <input [(ngModel)]="icon" />
+
+  <button class="emoji-picker-button" (click)="openEmojiPicker()">
+    Pick Emoji
+  </button>
+
+  <div class="emoji-modal-overlay" *ngIf="showPicker">
+    <div class="emoji-modal">
+      <button class="close-btn" (click)="openEmojiPicker()">✖</button>
+
+      <h2>Select Emoji</h2>
+
+      <div class="emoji-scroll">
+        <emoji-mart (emojiSelect)="selectEmoji($event)"></emoji-mart>
+      </div>
+    </div>
+  </div>
+
+
+  <button (click)="saveCategory()">Next</button>
+</div>
