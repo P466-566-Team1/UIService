@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Topic, Category } from '../../models/models';
+import { EdgeApiService } from '../../services/edge-api.service';
 
 @Component({
   selector: 'app-admin-topic-list',
@@ -11,14 +12,8 @@ import { Topic, Category } from '../../models/models';
   templateUrl: './admin-topic-list.html',
   styleUrls: ['./admin-topic-list.css']
 })
-export class AdminTopicListComponent {
-  topics: Topic[] = [
-    { id: '1', categoryId: '2', name: 'Cultural Holidays', imageUrl: 'extended-family-1.webp', number: 4},
-    { id: '2', categoryId: '2', name: 'National Holidays', imageUrl: 'extended-family-1.webp', number: 5 },
-    { id: '3', categoryId: '4', name: 'Fruits', imageUrl: 'assets/food-fruits.jpg', number: 2},
-    { id: '4', categoryId: '4', name: 'Vegetables', imageUrl: 'assets/food-vegetables.jpg', number: 7}
-  ];
-
+export class AdminTopicListComponent implements OnInit {
+  topics: Topic[] = [];
   category: Category | null = null;
   categoryId: string = '';
 
@@ -26,43 +21,66 @@ export class AdminTopicListComponent {
   topicToDelete: Topic | null = null;
   editingCategoryName = false;
   newCategoryName = '';
+  loading = false;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private apiService: EdgeApiService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.categoryId = this.route.snapshot.paramMap.get('categoryId') || '';
-    this.loadCategory();
-    this.filterTopics();
+    this.loadTopics();
   }
 
-  loadCategory(): void {
-    const categories = [
-      { id: '1', name: 'Spaces' },
-      { id: '2', name: 'Holidays' },
-      { id: '3', name: 'Activities' },
-      { id: '4', name: 'Food' },
-      { id: '5', name: 'Animals' },
-      { id: '6', name: 'Jobs' },
-      { id: '7', name: 'Nature' },
-      { id: '8', name: 'People' }
-    ];
+  loadTopics(): void {
+    if (!this.categoryId) return;
 
-    this.category = categories.find(c => c.id === this.categoryId) || null;
-    this.newCategoryName = this.category?.name || '';
-  }
-
-  filterTopics(): void {
-    this.topics = this.topics.filter(topic => topic.categoryId === this.categoryId);
+    this.loading = true;
+    this.apiService.getTopicsByCategory(Number(this.categoryId)).subscribe({
+      next: (topics) => {
+        this.topics = topics;
+        // Set category from first topic if available
+        if (topics.length > 0) {
+          this.category = {
+            id: this.categoryId,
+            name: topics[0].categoryName || 'Topics'
+          };
+          this.newCategoryName = this.category.name;
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load topics', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   saveCategoryName(): void {
-    if (this.category) {
-      this.category.name = this.newCategoryName.trim();
+    if (this.category && this.newCategoryName.trim()) {
+      const categoryData = {
+        name: this.newCategoryName.trim(),
+        icon: this.category.icon
+      };
+
+      this.apiService.updateCategory(Number(this.categoryId), categoryData).subscribe({
+        next: () => {
+          if (this.category) {
+            this.category.name = this.newCategoryName.trim();
+          }
+          this.editingCategoryName = false;
+        },
+        error: (err) => {
+          console.error('Failed to update category', err);
+          alert('Failed to update category name. Please try again.');
+        }
+      });
     }
-    this.editingCategoryName = false;
   }
 
   openAddTopic(): void {
@@ -85,9 +103,19 @@ export class AdminTopicListComponent {
 
   deleteTopic(): void {
     if (this.topicToDelete) {
-      this.topics = this.topics.filter(t => t.id !== this.topicToDelete!.id);
+      this.apiService.deleteTopic(Number(this.topicToDelete.id)).subscribe({
+        next: () => {
+          // Reload topics after deletion
+          this.loadTopics();
+          this.cancelDelete();
+        },
+        error: (err) => {
+          console.error('Failed to delete topic', err);
+          alert('Failed to delete topic. Please try again.');
+          this.cancelDelete();
+        }
+      });
     }
-    this.cancelDelete();
   }
 
   goBack(): void {

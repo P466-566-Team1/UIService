@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Label, Language, Topic } from '../models/models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { EdgeApiService } from '../services/edge-api.service';
 
 @Component({
   selector: 'app-image-viewer',
@@ -20,10 +21,14 @@ export class ImageViewerComponent implements OnInit {
   showUserMenu: boolean = false;
   showSettingsModal: boolean = false;
   darkMode: boolean = false;
+  loading: boolean = false;
+  imageUrl: string = '';
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiService: EdgeApiService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -36,89 +41,76 @@ export class ImageViewerComponent implements OnInit {
 
     const storedDark = localStorage.getItem('darkMode');
     this.darkMode = storedDark === 'true';
-
     this.applyTheme();
   }
 
-  applyTheme() {
-    
-    if (this.darkMode) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
-  }
-
-
   loadTopicAndLabels(): void {
     const topicId = this.route.snapshot.paramMap.get('topicId');
+    if (!topicId || !this.selectedLanguage) return;
 
-    this.topic = {
-      id: topicId || '1',
-      categoryId: '2',
-      name: 'Cultural Holidays',
-      imageUrl: 'assets/cultural-holidays.jpg',
-      number: 4
-    };
+    this.loading = true;
 
-    this.labels = [
-      {
-        id: '1',
-        topicId: topicId || '1',
-        x: 100,
-        y: 150,
-        width: 80,
-        height: 40,
-        translations: {
-          en: 'Lantern',
-          fa: 'فانوس',
-          es: 'Linterna'
-        },
-        audioUrls: {
-          en: 'assets/audio/lantern-en.mp3',
-          fa: 'assets/audio/lantern-fa.mp3',
-          es: 'assets/audio/lantern-es.mp3'
+    // Load labels for the topic with translations in selected language
+    this.apiService.getLabelsByTopic(Number(topicId), this.selectedLanguage.code).subscribe({
+      next: (labels) => {
+        this.labels = labels;
+
+        // Get topic info from first label if available
+        if (labels.length > 0) {
+          const firstLabel = labels[0];
+          this.topic = {
+            id: topicId,
+            categoryId: firstLabel.categoryId?.toString() || '',
+            name: 'Topic', // You might want to add topicName to LabelDTO
+            imageUrl: '',
+            number: labels.length
+          };
+
+          // Set image URL if we have an image ID (you may need to add this to your topic/label response)
+          // For now, we'll construct it from the topic endpoint
+          this.apiService.getTopicById(Number(topicId)).subscribe({
+            next: (topic) => {
+              if (topic.imageId) {
+                this.imageUrl = this.apiService.getImageUrl(topic.imageId);
+                if (this.topic) {
+                  this.topic.imageUrl = this.imageUrl;
+                }
+              }
+              this.cdr.detectChanges();
+            },
+            error: (err) => console.error('Failed to load topic details', err)
+          });
         }
+
+        this.loading = false;
+        this.cdr.detectChanges();
       },
-      {
-        id: '2',
-        topicId: topicId || '1',
-        x: 200,
-        y: 250,
-        width: 100,
-        height: 50,
-        translations: {
-          en: 'Festival',
-          fa: 'جشنواره',
-          es: 'Festival'
-        },
-        audioUrls: {
-          en: 'assets/audio/festival-en.mp3',
-          fa: 'assets/audio/festival-fa.mp3',
-          es: 'assets/audio/festival-es.mp3'
-        }
+      error: (err) => {
+        console.error('Failed to load labels', err);
+        this.loading = false;
+        this.cdr.detectChanges();
       }
-    ];
+    });
   }
 
   onLabelClick(label: Label, event: MouseEvent): void {
     event.stopPropagation();
     this.selectedLabel = label;
     this.showTranslation = true;
-
     this.playAudio(label);
   }
 
   playAudio(label: Label): void {
-    if (this.selectedLanguage && label.audioUrls[this.selectedLanguage.code]) {
-      const audio = new Audio(label.audioUrls[this.selectedLanguage.code]);
+    if (label.audioId) {
+      const audioUrl = this.apiService.getAudioUrl(label.audioId);
+      const audio = new Audio(audioUrl);
       audio.play().catch(e => console.log('Audio play failed:', e));
     }
   }
 
   getCurrentTranslation(label: Label): string {
-    if (!this.selectedLanguage) return 'No translation available';
-    return label.translations[this.selectedLanguage.code] || 'Translation not available';
+    // The label already has the translated text for the selected language
+    return label.translatedText || label.englishText || 'Translation not available';
   }
 
   closeTranslation(): void {
@@ -126,11 +118,19 @@ export class ImageViewerComponent implements OnInit {
     this.selectedLabel = null;
   }
 
+  applyTheme() {
+    if (this.darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }
+
   goBack(): void {
     this.router.navigate(['/topics', this.topic?.categoryId]);
   }
 
-   toggleUserMenu() {
+  toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
   }
 

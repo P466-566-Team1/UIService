@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Topic, Language, Category } from '../models/models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { EdgeApiService } from '../services/edge-api.service';
 
 @Component({
   selector: 'app-topic-list',
@@ -13,23 +13,20 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./topic-list.css']
 })
 export class TopicListComponent implements OnInit {
-  topics: Topic[] = [
-   { id: '1', categoryId: '2', name: 'Cultural Holidays', imageUrl: 'extended-family-1.webp', number: 4},
-    { id: '2', categoryId: '2', name: 'National Holidays', imageUrl: 'extended-family-1.webp', number: 5 },
-    { id: '3', categoryId: '4', name: 'Fruits', imageUrl: 'assets/food-fruits.jpg', number: 2},
-    { id: '4', categoryId: '4', name: 'Vegetables', imageUrl: 'assets/food-vegetables.jpg', number: 7}
-  ];
-
+  topics: Topic[] = [];
   category: Category | null = null;
   selectedLanguage: Language | null = null;
   categoryId: string = '';
   showUserMenu: boolean = false;
   showSettingsModal: boolean = false;
   darkMode: boolean = false;
+  loading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiService: EdgeApiService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -39,31 +36,36 @@ export class TopicListComponent implements OnInit {
     }
 
     this.categoryId = this.route.snapshot.paramMap.get('categoryId') || '';
-    this.loadCategory();
-    this.filterTopics();
+    this.loadTopics();
+
     const storedDark = localStorage.getItem('darkMode');
     this.darkMode = storedDark === 'true';
-
     this.applyTheme();
   }
 
-  loadCategory(): void {
-    const categories = [
-      { id: '1', name: 'Spaces' },
-      { id: '2', name: 'Holidays' },
-      { id: '3', name: 'Activities' },
-      { id: '4', name: 'Food' },
-      { id: '5', name: 'Animals' },
-      { id: '6', name: 'Jobs' },
-      { id: '7', name: 'Nature' },
-      { id: '8', name: 'People' }
-    ];
-    this.category = categories.find(c => c.id === this.categoryId) || null;
-  }
+  loadTopics(): void {
+    if (!this.categoryId) return;
 
-
-  filterTopics(): void {
-    this.topics = this.topics.filter(topic => topic.categoryId === this.categoryId);
+    this.loading = true;
+    this.apiService.getTopicsByCategory(Number(this.categoryId)).subscribe({
+      next: (topics) => {
+        this.topics = topics;
+        // Set category name from first topic if available
+        if (topics.length > 0) {
+          this.category = {
+            id: this.categoryId,
+            name: topics[0].categoryName || 'Topics'
+          };
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load topics', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   selectTopic(topic: Topic): void {

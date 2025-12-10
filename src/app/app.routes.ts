@@ -9,6 +9,7 @@ import { AdminAddCategoryComponent } from './admin/admin-add-category/admin-add-
 import { AdminAddTopicComponent } from './admin/admin-add-topic/admin-add-topic.component';
 import { LabelEditorComponent } from './admin/admin-label-editor/admin-label-editor.component';
 import { AdminTopicListComponent } from './admin/admin-topic-list/admin-topic-list.component';
+import { AdminAnalyticsDashboardComponent } from './admin/admin-analytics-dashboard/admin-analytics-dashboard.component';
 
 export const routes: Routes = [
     { path: '', component: LanguageSelectorComponent },
@@ -21,5 +22,6 @@ export const routes: Routes = [
     { path: 'admin/categories/:categoryId/topics', component: AdminTopicListComponent },
     { path: 'admin/categories/:categoryId/add-topic', component: AdminAddTopicComponent },
     { path: 'admin/label-editor/:number/:topicId', component: LabelEditorComponent },
+    { path: 'admin/analytics', component: AdminAnalyticsDashboardComponent },
     { path: '**', redirectTo: '' }
 ];

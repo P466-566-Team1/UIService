@@ -1,7 +1,7 @@
-:host{
-    --bg: #F4F3F2;  
-    --card-bg: #0D1B2A; 
-    --text: #0D1B2A; 
+:host {
+    --bg: #F4F3F2;
+    --card-bg: #0D1B2A;
+    --text: #0D1B2A;
     --text-light: #F4F3F2;
 
     --accent: #778DA9;
@@ -54,6 +54,30 @@
     font-size: 2rem;
 }
 
+.admin-nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.admin-nav a {
+    color: var(--text);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background var(--transition);
+}
+
+.admin-nav a:hover {
+    background: var(--accent);
+    color: var(--text-light);
+}
+
+.admin-nav a.active {
+    background: var(--accent-dark);
+    color: var(--text-light);
+    font-weight: bold;
+}
+
 .category-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -78,10 +102,11 @@
     box-shadow: 0 4px 16px var(--shadow);
 }
 
-.category-icon{
+.category-icon {
     font-size: 3rem;
     margin-bottom: 1rem;
 }
+
 .category-name {
     color: var(--text-light);
 }
@@ -117,7 +142,7 @@
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0, 0, 0, 0.55);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -139,7 +164,8 @@
     margin-top: 1.5rem;
 }
 
-.cancel-btn, .confirm-btn {
+.cancel-btn,
+.confirm-btn {
     padding: .7rem 1rem;
     border-radius: 8px;
     border: none;

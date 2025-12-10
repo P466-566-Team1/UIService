@@ -1,31 +1,47 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Category } from '../../models/models';
+import { EdgeApiService } from '../../services/edge-api.service';
 
 @Component({
   selector: 'app-admin-category-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './admin-category-list.html',
   styleUrls: ['./admin-category-list.css']
 })
-export class AdminCategoryListComponent {
-    categories: Category[] = [
-    { id: '1', name: 'Spaces', icon: '🏠' },
-    { id: '2', name: 'Holidays', icon: '🎊' },
-    { id: '3', name: 'Activities', icon: '🎨' },
-    { id: '4', name: 'Food', icon: '🍔' },
-    { id: '5', name: 'Animals', icon: '🐶' },
-    { id: '6', name: 'Jobs', icon: '💼' },
-    { id: '7', name: 'Nature', icon: '🌳' },
-    { id: '8', name: 'People', icon: '🧑' },
-  ];
-
+export class AdminCategoryListComponent implements OnInit {
+  categories: Category[] = [];
   showDeleteModal = false;
   categoryToDelete: Category | null = null;
+  loading = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private apiService: EdgeApiService,
+    private cdr: ChangeDetectorRef
+  ) { }
+
+  ngOnInit(): void {
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.loading = true;
+    this.apiService.getCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load categories', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   goBack() {
     this.router.navigate(['/admin']);
@@ -55,9 +71,18 @@ export class AdminCategoryListComponent {
 
   deleteCategory() {
     if (this.categoryToDelete) {
-      this.categories = this.categories.filter(c => c.id !== this.categoryToDelete!.id);
-      localStorage.setItem('categories', JSON.stringify(this.categories));
+      this.apiService.deleteCategory(Number(this.categoryToDelete.id)).subscribe({
+        next: () => {
+          // Reload categories after deletion
+          this.loadCategories();
+          this.cancelDelete();
+        },
+        error: (err) => {
+          console.error('Failed to delete category', err);
+          alert('Failed to delete category. Please try again.');
+          this.cancelDelete();
+        }
+      });
     }
-    this.cancelDelete();
   }
 }

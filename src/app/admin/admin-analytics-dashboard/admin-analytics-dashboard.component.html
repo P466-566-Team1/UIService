@@ -1,0 +1,91 @@
+<div class="analytics-container">
+    <header class="header">
+        <button class="back-button" (click)="goBack()">←</button>
+        <h1 class="title">Analytics Dashboard</h1>
+        <nav class="admin-nav">
+            <a routerLink="/admin/categories" routerLinkActive="active">Categories</a>
+            <a routerLink="/admin/analytics" routerLinkActive="active">Analytics</a>
+        </nav>
+        <button class="refresh-button" (click)="refreshAnalytics()" [disabled]="loading">🔄 Refresh</button>
+    </header>
+
+    <div class="summary-section last-refreshed" *ngIf="lastRefreshed && !loading">
+        <div class="summary-card">
+            <h4 style="margin: 0; font-weight: normal;">Last refreshed</h4>
+            <p class="summary-value" style="margin: 0;">{{ lastRefreshed | date:'short' }}</p>
+        </div>
+    </div>
+
+    <div class="summary-section" *ngIf="summary">
+        <div class="summary-card">
+            <h3>Unique Categories Viewed</h3>
+            <p class="summary-value">{{ summary.uniqueCategoriesViewed }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Unique Topics Viewed</h3>
+            <p class="summary-value">{{ summary.uniqueTopicsViewed }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Total Category Views</h3>
+            <p class="summary-value">{{ summary.totalCategoryViews }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Total Topic Views</h3>
+            <p class="summary-value">{{ summary.totalTopicViews }}</p>
+        </div>
+    </div>
+
+    <div class="analytics-grid">
+        <div class="analytics-section">
+            <h2>Top 10 Categories by Views</h2>
+            <div class="loading-message" *ngIf="loading">Loading...</div>
+            <table class="analytics-table" *ngIf="!loading && topCategories.length > 0">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Category Name</th>
+                        <th>View Count</th>
+                        <th>Last Viewed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let category of topCategories; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ category.categoryName }}</td>
+                        <td>{{ category.viewCount }}</td>
+                        <td>{{ category.lastViewedAt | date:'short' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="no-data" *ngIf="!loading && topCategories.length === 0">
+                No category analytics data available
+            </div>
+        </div>
+
+        <div class="analytics-section">
+            <h2>Top 10 Topics by Views</h2>
+            <div class="loading-message" *ngIf="loading">Loading...</div>
+            <table class="analytics-table" *ngIf="!loading && topTopics.length > 0">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Topic Name</th>
+                        <th>View Count</th>
+                        <th>Last Viewed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let topic of topTopics; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ topic.topicName }}</td>
+                        <td>{{ topic.viewCount }}</td>
+                        <td>{{ topic.lastViewedAt | date:'short' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="no-data" *ngIf="!loading && topTopics.length === 0">
+                No topic analytics data available
+            </div>
+        </div>
+    </div>
+</div>

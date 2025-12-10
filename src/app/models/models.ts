@@ -14,18 +14,27 @@ export interface Category {
 export interface Topic {
   id: string;
   categoryId: string;
+  categoryName?: string;
   name: string;
   imageUrl: string;
+  imageId?: number;
   number: number;
 }
 
 export interface Label {
-  id: string;
-  topicId: string;
+  id: string | number;
+  number?: number;
   x: number;
   y: number;
-  width: number;
-  height: number;
-  translations: { [languageCode: string]: string };
-  audioUrls: { [languageCode: string]: string };
+  englishText: string;
+  translatedText: string;
+  audioId?: number;
+  vocabularyId?: number;
+  topicId: string | number;
+  categoryId?: number;
+  // Legacy fields for backward compatibility
+  width?: number;
+  height?: number;
+  translations?: { [languageCode: string]: string };
+  audioUrls?: { [languageCode: string]: string };
 }

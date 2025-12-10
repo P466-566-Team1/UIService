@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category, Language } from '../models/models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { EdgeApiService } from '../services/edge-api.service';
 
 @Component({
   selector: 'app-category-list',
@@ -12,23 +13,18 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./category-list.css']
 })
 export class CategoryListComponent implements OnInit {
-  categories: Category[] = [
-    { id: '1', name: 'Spaces', icon: '🏠' },
-    { id: '2', name: 'Holidays', icon: '🎊' },
-    { id: '3', name: 'Activities', icon: '🎨' },
-    { id: '4', name: 'Food', icon: '🍔' },
-    { id: '5', name: 'Animals', icon: '🐶' },
-    { id: '6', name: 'Jobs', icon: '💼' },
-    { id: '7', name: 'Nature', icon: '🌳' },
-    { id: '8', name: 'People', icon: '🧑' },
-  ];
-
+  categories: Category[] = [];
   selectedLanguage: Language | null = null;
   showUserMenu: boolean = false;
   showSettingsModal: boolean = false;
   darkMode: boolean = false;
+  loading: boolean = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private apiService: EdgeApiService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     const storedLanguage = localStorage.getItem('selectedLanguage');
@@ -39,22 +35,37 @@ export class CategoryListComponent implements OnInit {
     }
     const storedDark = localStorage.getItem('darkMode');
     this.darkMode = storedDark === 'true';
-
     this.applyTheme();
+    this.loadCategories();
   }
 
+  loadCategories(): void {
+    this.loading = true;
+    this.apiService.getCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load categories', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+        // Show error to user - categories will remain empty
+      }
+    });
+  }
+
+  selectCategory(category: Category): void {
+    this.router.navigate(['/topics', category.id]);
+  }
 
   applyTheme() {
-    
     if (this.darkMode) {
       document.body.classList.add('dark-mode');
     } else {
       document.body.classList.remove('dark-mode');
     }
-  }
-
-  selectCategory(category: Category): void {
-    this.router.navigate(['/topics', category.id]);
   }
 
   goBack(): void {
