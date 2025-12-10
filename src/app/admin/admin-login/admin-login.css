@@ -1,7 +1,7 @@
 :host {
-    --bg: #F4F3F2;  
-    --card-bg: #0D1B2A; 
-    --text: #0D1B2A; 
+    --bg: #F4F3F2;
+    --card-bg: #0D1B2A;
+    --text: #0D1B2A;
     --text-light: #F4F3F2;
 
     --accent: #778DA9;
@@ -69,7 +69,7 @@ label {
     color: var(--text);
 }
 
-input{
+input {
     width: 96%;
     padding: 0.8rem;
     margin-bottom: 1.5rem;
