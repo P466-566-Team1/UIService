@@ -88,7 +88,9 @@ export class AdminTopicListComponent implements OnInit {
   }
 
   editTopic(topic: Topic) {
-    this.router.navigate([`/admin/topics/${topic.id}/labels`]);
+    // Navigate to label editor for this topic, using its existing label count
+    const labelCount = topic.number || 1;
+    this.router.navigate([`/admin/label-editor`, labelCount, topic.id]);
   }
 
   confirmDeleteTopic(topic: Topic): void {

@@ -46,43 +46,60 @@ export class AdminAddTopicComponent {
 
     this.loading = true;
 
-    // First, get image dimensions for upload
-    const img = new Image();
-    img.onload = () => {
-      const width = img.width;
-      const height = img.height;
-
-      // Upload image to MediaService first
-      this.apiService.uploadImage(this.imageFile!, Number(this.categoryId), width, height).subscribe({
-        next: (imageResponse) => {
-          // Create topic with the uploaded image ID
-          const topicData = {
-            name: this.name,
-            categoryId: Number(this.categoryId),
-            imageId: imageResponse.id
-          };
-
-          this.apiService.createTopic(topicData).subscribe({
-            next: (createdTopic) => {
-              this.loading = false;
-              // Navigate to label editor
-              this.router.navigate(['/admin/label-editor', this.number, createdTopic.id]);
-            },
-            error: (err) => {
-              console.error('Failed to create topic', err);
-              alert('Failed to create topic. Please try again.');
-              this.loading = false;
-            }
-          });
-        },
-        error: (err) => {
-          console.error('Failed to upload image', err);
-          alert('Failed to upload image. Please try again.');
-          this.loading = false;
-        }
-      });
+    // Step 1: Create topic first with a temporary imageId (null)
+    const topicData = {
+      name: this.name,
+      categoryId: Number(this.categoryId),
+      imageId: null  // Will be updated after image upload
     };
 
-    img.src = this.previewUrl!;
+    this.apiService.createTopic(topicData).subscribe({
+      next: (createdTopic) => {
+        // Step 2: Now upload image with the created topic ID
+        const img = new Image();
+        img.onload = () => {
+          const width = img.width;
+          const height = img.height;
+
+          this.apiService.uploadImage(this.imageFile!, createdTopic.id, width, height).subscribe({
+            next: (imageResponse) => {
+              // Step 3: Update the topic with the correct imageId
+              const updateData = {
+                name: this.name,
+                categoryId: Number(this.categoryId),
+                imageId: imageResponse.id
+              };
+
+              this.apiService.updateTopic(createdTopic.id, updateData).subscribe({
+                next: (updatedTopic) => {
+                  this.loading = false;
+                  // Navigate to label editor with the created topic
+                  this.router.navigate(['/admin/label-editor', this.number, createdTopic.id]);
+                },
+                error: (err) => {
+                  console.error('Failed to update topic with imageId', err);
+                  alert('Topic created but failed to link image. Please try editing the topic.');
+                  this.loading = false;
+                }
+              });
+            },
+            error: (err) => {
+              console.error('Failed to upload image', err);
+              alert('Topic created but image upload failed. Please try editing the topic.');
+              this.loading = false;
+              // Still navigate to label editor since topic was created
+              this.router.navigate(['/admin/label-editor', this.number, createdTopic.id]);
+            }
+          });
+        };
+
+        img.src = this.previewUrl!;
+      },
+      error: (err) => {
+        console.error('Failed to create topic', err);
+        alert('Failed to create topic. Please try again.');
+        this.loading = false;
+      }
+    });
   }
 }

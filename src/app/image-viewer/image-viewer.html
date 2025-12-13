@@ -50,13 +50,14 @@
 
     <div class="image-container" (click)="closeTranslation()">
       <div class="image-placeholder">
-        <img *ngIf="imageUrl" [src]="imageUrl" [alt]="topic?.name" style="max-width: 100%; height: auto;">
+        <img *ngIf="imageUrl" [src]="imageUrl" [alt]="topic?.name">
         <div *ngIf="!imageUrl && !loading">No image available</div>
         <div *ngIf="loading">Loading image...</div>
       </div>
 
       <div *ngFor="let label of labels" class="label-marker" [style.left.px]="label.x" [style.top.px]="label.y"
-        [style.width.px]="label.width" [style.height.px]="label.height" (click)="onLabelClick(label, $event)">
+        [style.width.px]="label.width || 80" [style.height.px]="label.height || 40"
+        (click)="onLabelClick(label, $event)">
         <div class="marker-dot"></div>
       </div>
     </div>

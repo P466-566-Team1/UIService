@@ -37,7 +37,7 @@ export class LanguageSelectorComponent implements OnInit {
     this.loading = true;
     this.apiService.getLanguages().subscribe({
       next: (languages) => {
-        // Filter out English - only show Persian and Spanish
+        // Filter out English - only show Persian and Arabic
         this.languages = languages.filter(l => l.code !== 'en');
         this.loading = false;
         this.cdr.detectChanges();

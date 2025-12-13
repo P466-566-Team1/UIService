@@ -1,7 +1,7 @@
-:host{
-    --bg: #F4F3F2;  
-    --card-bg: #0D1B2A; 
-    --text: #0D1B2A; 
+:host {
+    --bg: #F4F3F2;
+    --card-bg: #0D1B2A;
+    --text: #0D1B2A;
     --text-light: #F4F3F2;
 
     --accent: #778DA9;
@@ -28,12 +28,13 @@ button svg {
 
 .image-viewer-container {
     width: 100%;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
     padding: 1rem 2rem;
     background: var(--bg);
     box-sizing: border-box;
     transition: background var(--transition), color var(--transition);
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -162,31 +163,45 @@ button svg {
     cursor: pointer;
 }
 
-
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
 
 .topic-title {
     font-size: 1.8rem;
     color: var(--text);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .image-container {
     position: relative;
     display: inline-block;
+    width: 800px;
     margin: 0 auto;
-    cursor: pointer;
 }
 
 .image-placeholder {
-    width: 600px;
-    height: 400px;
-    background: #ecf0f1;
-    border: 2px dashed #bdc3c7;
+    width: 800px;
+    height: auto;
+    background: var(--bg);
+    border: 2px solid var(--border);
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
+    color: var(--text);
+}
+
+.image-placeholder img {
+    display: block;
+    width: 800px;
+    height: auto;
+    border-radius: 8px;
 }
 
 .label-marker {

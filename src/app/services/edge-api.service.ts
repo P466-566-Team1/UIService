@@ -66,6 +66,14 @@ export class EdgeApiService {
         return this.http.post<any>(`${this.baseUrl}/vocab/api/labels`, label);
     }
 
+    updateLabel(id: number, label: any): Observable<any> {
+        return this.http.put<any>(`${this.baseUrl}/vocab/api/labels/${id}`, label);
+    }
+
+    deleteLabel(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/vocab/api/labels/${id}`);
+    }
+
     // ======================
     // VOCABULARY ENDPOINTS
     // ======================
@@ -104,11 +112,16 @@ export class EdgeApiService {
         return `${this.baseUrl}/media/images/${imageId}`;
     }
 
-    uploadAudio(file: File, translationId: number): Observable<any> {
+    uploadAudio(file: File, translationId: number, languageCode: string): Observable<any> {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('translationId', translationId.toString());
+        formData.append('languageCode', languageCode);
         return this.http.post<any>(`${this.baseUrl}/media/audios/upload`, formData);
+    }
+
+    updateTranslationAudio(translationId: number, audioId: number): Observable<any> {
+        return this.http.patch<any>(`${this.baseUrl}/vocab/api/translations/${translationId}/audio/${audioId}`, {});
     }
 
     getAudioUrl(audioId: number): string {

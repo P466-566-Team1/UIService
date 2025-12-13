@@ -24,8 +24,8 @@ export interface Topic {
 export interface Label {
   id: string | number;
   number?: number;
-  x: number;
-  y: number;
+  xCoordinate: number;  // Match backend DTO
+  yCoordinate: number;  // Match backend DTO
   englishText: string;
   translatedText: string;
   audioId?: number;
@@ -33,6 +33,8 @@ export interface Label {
   topicId: string | number;
   categoryId?: number;
   // Legacy fields for backward compatibility
+  x?: number;  // Alias for xCoordinate
+  y?: number;  // Alias for yCoordinate
   width?: number;
   height?: number;
   translations?: { [languageCode: string]: string };

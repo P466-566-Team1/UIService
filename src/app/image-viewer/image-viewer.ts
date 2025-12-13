@@ -53,7 +53,14 @@ export class ImageViewerComponent implements OnInit {
     // Load labels for the topic with translations in selected language
     this.apiService.getLabelsByTopic(Number(topicId), this.selectedLanguage.code).subscribe({
       next: (labels) => {
-        this.labels = labels;
+        // Map backend coordinates to frontend format and add defaults
+        this.labels = labels.map(label => ({
+          ...label,
+          x: label.xCoordinate,
+          y: label.yCoordinate,
+          width: label.width || 80,
+          height: label.height || 40
+        }));
 
         // Get topic info from first label if available
         if (labels.length > 0) {
